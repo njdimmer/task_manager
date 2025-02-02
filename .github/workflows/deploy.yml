@@ -1,15 +1,10 @@
-# This workflow is responsible for deploying the application to the production environment.
-
 name: Deploy
 
 on:
   workflow_run:
     workflows: ["CI"]
-    types:
-      - completed
-    branches:
-      - main
-
+    types: [ "completed" ]
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,8 +19,14 @@ jobs:
         token: ${{ secrets.TASK_MANAGER_INFRASTRUCTURE_TOKEN }}
         path: infrastructure
 
+    - name: Check infra directory contents
+      run: |
+        ls -la infrastructure
+
     - name: Install Docker Compose
       run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
         sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
@@ -34,15 +35,3 @@ jobs:
       run: |
         cd infrastructure
         docker-compose -f docker-compose.yml up --build -d
-
-    - name: Wait for containers to be ready
-      run: |
-        docker-compose -f infrastructure/docker-compose.yml exec taskmanager sh -c "until flask db upgrade; do echo 'Waiting for DB...'; sleep 5; done"
-
-    - name: Run tests in Docker container
-      run: |
-        docker-compose -f infrastructure/docker-compose.yml exec taskmanager pytest tests -n auto
-
-    - name: Stop and remove Docker containers
-      run: |
-        docker-compose -f infrastructure/docker-compose.yml down
