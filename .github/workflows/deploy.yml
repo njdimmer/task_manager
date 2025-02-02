@@ -30,6 +30,10 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
         sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
+    - name: Copy requirements.txt to infrastructure directory
+      run: |
+        cp requirements.txt ./infrastructure/docker/requirements.txt
+
     - name: Build and start Docker Compose services
       run: |
         docker-compose -f infrastructure/docker/docker-compose.yml up --build -d
