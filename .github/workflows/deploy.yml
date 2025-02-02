@@ -38,9 +38,9 @@ jobs:
       run: |
         docker-compose -f infrastructure/docker/docker-compose.yml up --build -d
 
-    # - name: Wait for containers to be ready
-    #   run: |
-    #     docker-compose -f infrastructure/docker/docker-compose.yml exec -T taskmanager sh -c "until flask db upgrade; do echo 'Waiting for DB...'; sleep 5; done"
+    - name: Wait for containers to be ready
+      run: |
+        docker-compose -f infrastructure/docker/docker-compose.yml exec -T taskmanager sh -c "until flask db upgrade; do echo 'Waiting for DB...'; sleep 5; done"
 
     - name: Run tests in Docker container
       run: |
