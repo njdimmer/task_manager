@@ -44,7 +44,7 @@ jobs:
 
     - name: Run tests in Docker container
       run: |
-        docker-compose -f infrastructure/docker/docker-compose.yml exec taskmanager pytest tests -n auto
+        docker-compose -f infrastructure/docker/docker-compose.yml exec -T taskmanager pytest tests -n auto
 
     - name: Stop and remove Docker containers
       run: |
