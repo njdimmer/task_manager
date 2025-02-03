@@ -39,6 +39,16 @@ jobs:
         docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest
 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
+
     - name: Apply Terraform
       run: |
         cd infrastructure/terraform
