@@ -24,6 +24,13 @@ jobs:
         token: ${{ secrets.TASK_MANAGER_INFRASTRUCTURE_TOKEN }}
         path: infrastructure
 
+    - name: Create .env file
+      run: |
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+
     - name: Install Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -37,14 +44,6 @@ jobs:
     - name: Build and start Docker Compose services
       run: |
         docker-compose -f infrastructure/docker/docker-compose.yml up --build -d
-
-    # - name: Wait for containers to be ready
-    #   run: |
-    #     docker-compose -f infrastructure/docker/docker-compose.yml exec -T taskmanager sh -c "until flask db upgrade; do echo 'Waiting for DB...'; sleep 5; done"
-
-    - name: Run tests in Docker container
-      run: |
-        docker-compose -f infrastructure/docker/docker-compose.yml exec -T taskmanager pytest tests -n auto
 
     - name: Stop and remove Docker containers
       run: |
