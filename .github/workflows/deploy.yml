@@ -40,13 +40,13 @@ jobs:
     #     sudo chmod +x /usr/local/bin/docker-compose
     #     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
-    - name: Copy requirements.txt to infrastructure directory
-      run: |
-        cp requirements.txt ./infrastructure/docker/requirements.txt
+    # - name: Copy requirements.txt to infrastructure directory
+    #   run: |
+    #     cp requirements.txt ./infrastructure/docker/requirements.txt
 
     - name: Build and push Docker images
       run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest -f infrastructure/docker/Dockerfile .
+        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest -f .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest
 
     # - name: Build and start Docker Compose services
