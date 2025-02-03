@@ -5,6 +5,8 @@ services:
     build: .
     container_name: taskmanager
     restart: always
+    environment:
+      - FLASK_APP=app/__init__.py
     expose:
       - "8080"
     env_file:
