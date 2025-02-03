@@ -46,7 +46,7 @@ jobs:
 
     - name: Build and push Docker images
       run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest -f .
+        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest
 
     # - name: Build and start Docker Compose services
