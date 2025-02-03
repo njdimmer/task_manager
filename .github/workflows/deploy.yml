@@ -34,25 +34,13 @@ jobs:
         echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> ./infrastructure/docker/.env
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./infrastructure/docker/.env
 
-    # - name: Install Docker Compose
-    #   run: |
-    #     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    #     sudo chmod +x /usr/local/bin/docker-compose
-    #     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
-    # - name: Copy requirements.txt to infrastructure directory
-    #   run: |
-    #     cp requirements.txt ./infrastructure/docker/requirements.txt
-
     - name: Build and push Docker images
       run: |
         docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/taskmanager:latest
 
-    # - name: Build and start Docker Compose services
-    #   run: |
-    #     docker-compose -f infrastructure/docker/docker-compose.yml up --build -d
-
-    # - name: Stop and remove Docker containers
-    #   run: |
-    #     docker-compose -f infrastructure/docker/docker-compose.yml down
+    - name: Apply Terraform
+      run: |
+        cd infrastructure/terraform
+        terraform init
+        terraform apply -auto-approve
