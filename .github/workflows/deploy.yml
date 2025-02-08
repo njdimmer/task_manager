@@ -59,6 +59,8 @@ jobs:
         TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_admin_username: ${{ secrets.ADMIN_USERNAME }}
         TF_VAR_admin_password: ${{ secrets.ADMIN_PASSWORD }}
+        TF_VAR_acr_username: ${{ secrets.ACR_NAME }}
+        TF_VAR_acr_password: ${{ secrets.ACR_PASSWORD }}
       run: |
         cd infrastructure/terraform
         terraform init
